@@ -4,17 +4,33 @@ import { UserContext } from '../context/UserProvider'
 
 const Navbar = () => {
 
-    const {user, setUser} = useContext(UserContext)
+    const {user, signOutUser} = useContext(UserContext)
+
+
+//con este evento cerramos sesion Nota: el async nos permite hacer la conexion con la api(firebase) 
+    const handleClickLogOut = async() => {
+
+        try {
+            await signOutUser()
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
 
     return(
         <div>
             {user ? (
                 <>
                 <NavLink to="/">Inicio</NavLink>
-                <button onClick={() => setUser(false)} >Cerrar </button>
+                <button onClick={handleClickLogOut} >Cerrar </button>
                 </>
                 ) : (
-                    <NavLink to="/login">Login</NavLink>
+                    <>
+                        <NavLink to="/login">Login</NavLink>
+                        |||
+                        <NavLink to="/register">Register</NavLink>
+                    </>
                 )
 
             }

@@ -6,6 +6,7 @@ import Login from './routes/Login';
 import Home from './routes/Home';
 import Navbar from './components/Navbar';
 import RequireAuth from './components/RequireAuth';
+import Register from './routes/Register';
 
 
 const App = () => {
@@ -20,7 +21,8 @@ const App = () => {
             <Home/> 
           </RequireAuth>
         }/>
-        <Route path='/Login' element={<Login />} ></Route>
+        <Route path='/login' element={<Login />} ></Route>
+        <Route path='/register' element={<Register />} ></Route>
       </Routes>
     </>
   )
@@ -71,6 +73,10 @@ vamos a utilizar el context, vamos a crear una carpeta con ese nombre y creamos 
 RUTAS PROTEGIDAS
 
 el RequireAuth lo exportamos y lo que va envolver son todos los accesos que estaran protegido donde solo el usuario tiene acceso
+
+#Paso 7:
+
+agregamos una nueva ruta que se llama register 
 
 
 

@@ -1,32 +1,28 @@
 import { useContext, useState } from "react"
-import { UserContext } from "../context/UserProvider"
-import { useNavigate} from 'react-router-dom'
+import { UserContext} from "../context/UserProvider"
 
-const Login = () => {
+const Register = () => {
 
     const [email, setEmail] = useState('simon@test.com')
     const [password, setPassword] = useState('123123')
-    
-//Paso 1
-    const {loginUser} = useContext(UserContext)
-    const navigate = useNavigate()
 
+    //este usecontext es importante para llamar estados desde otro componente
+    const {registerUser} = useContext(UserContext)
 
-// mismo evento del componente register solo cambia en el await por el loginUser que viene del componente provider
+    // con este evento vamos hacer una funcion asynch 
     const handleSubmit = async(e) => {
         e.preventDefault()
         console.log('loading...',email, password )
         try {
-            await loginUser(email, password)
+            await registerUser(email, password)
         } catch (error) {
             console.log(error)
         }
     }
 
-
-    return(
+    return (
         <>
-            <h1>Login</h1>
+            <h1>Register</h1>
             <form onSubmit={handleSubmit}>
                 <input 
                     type="email" 
@@ -41,16 +37,11 @@ const Login = () => {
                     onChange={e => setPassword(e.target.value)}
                 />
                 <button type="submit">
-                    Login
+                    registrar
                 </button>
             </form>
         </>
     )
 }
 
-export default Login
-
-/*
-aqui usamos el useNavigate que un elemento de react router dom que nos permite
-llevar al usuario al momento de llevar al home al momento que que quiera acceder cambiando su estado de false a true
-*/
+export default Register
