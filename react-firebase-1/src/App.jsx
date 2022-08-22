@@ -7,9 +7,19 @@ import Home from './routes/Home';
 import Navbar from './components/Navbar';
 import RequireAuth from './components/RequireAuth';
 import Register from './routes/Register';
+import { useContext } from 'react';
+import { UserContext } from './context/UserProvider';
 
 
 const App = () => {
+
+//El con context es importante para llamar elementos de un componete y utilizarlos
+  const {user} = useContext(UserContext)
+//como el usuario inicializa con el estado false
+//Nota importantisimo este if por que nos permite proteger el navbar mientras se hacen los llamados de la base de datos
+  if(user === false){
+    return <p>Loading...</p>
+  }
 
   return (
     <>

@@ -15,7 +15,9 @@ const UserProvider = ({children}) => {
 // con este metodo hacemos que usuario este en linea
 
 //el useEffect nos permite ejecutar algo por cada renderizado que salga en nuestro sitio web o que este pendiente de ciertas cosas
-    useEffect(() => {       
+    useEffect(() => {      
+// el onAuthStateChanged es un observable importante para los cambios de gestion de usuario
+// Nota https://firebase.google.com/docs/auth/web/start?hl=es&authuser=0 aqui podras ver el observable
         const unsuscribe = onAuthStateChanged(auth, user => {
             console.log(user)
 //con este if si el usuario esta en line arroja todo este objeto {email, photoURL, displayName, uid}

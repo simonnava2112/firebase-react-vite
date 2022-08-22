@@ -1,6 +1,9 @@
 import { useContext, useState } from "react"
 import { UserContext } from "../context/UserProvider"
-import { useNavigate} from 'react-router-dom'
+import{useNavigate} from 'react-router-dom'
+
+
+
 
 const Login = () => {
 
@@ -9,15 +12,20 @@ const Login = () => {
     
 //Paso 1
     const {loginUser} = useContext(UserContext)
-    const navigate = useNavigate()
+    
+// IMPORTANTE EL NAVEGATE VA EN EL TRY DURAMOS AQUI UNA HORA VIENDO ESO
+    const navegate = useNavigate()
+
 
 
 // mismo evento del componente register solo cambia en el await por el loginUser que viene del componente provider
     const handleSubmit = async(e) => {
         e.preventDefault()
         console.log('loading...',email, password )
+        
         try {
             await loginUser(email, password)
+            navegate("/")
         } catch (error) {
             console.log(error)
         }
