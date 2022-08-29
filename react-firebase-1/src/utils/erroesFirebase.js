@@ -19,6 +19,14 @@ export const erroresFirebase = (code) => {
                 */
                 return "Formato email no válido";
 
+            //usuario no registrado
+            case "auth/user-not-found":
+                return "usuario no registrado";
+            
+            //password incorrecto
+            case "auth/wrong-password":
+                return "Password incorrecto";
+
         default:
             return 'Ocurrio un error en el servidor'
             //console.log('Ocurrio un error en el servidor')

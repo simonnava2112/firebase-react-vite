@@ -1,53 +1,74 @@
 import { useContext, useState } from "react"
 import { UserContext } from "../context/UserProvider"
 import{useNavigate} from 'react-router-dom'
+import { useForm } from "react-hook-form"
+import { erroresFirebase } from "../utils/erroesFirebase"
+import FormError from "../components/FormError"
+import FormInput from "../components/FormInput"
+import formValidate from "../utils/formValidate"
 
 
 
 
 const Login = () => {
-
-    const [email, setEmail] = useState('simon@test.com')
-    const [password, setPassword] = useState('123123')
-    
 //Paso 1
     const {loginUser} = useContext(UserContext)
     
 // IMPORTANTE EL NAVEGATE VA EN EL TRY DURAMOS AQUI UNA HORA VIENDO ESO
     const navegate = useNavigate()
-
+//cosas de react hook form
+const {register, handleSubmit, formState: {errors},  setError } = useForm()
+//cosas de formValidate
+const {required, patternEmail, minLength, validateTrim} = formValidate()
 
 
 // mismo evento del componente register solo cambia en el await por el loginUser que viene del componente provider
-    const handleSubmit = async(e) => {
-        e.preventDefault()
-        console.log('loading...',email, password )
-        
-        try {
-            await loginUser(email, password)
-            navegate("/")
-        } catch (error) {
-            console.log(error)
+
+const onSubmit = async({email, password}) => {
+    try {
+        await loginUser(email, password)
+        navegate("/")
+    } catch (error) {
+        console.log(error.code)
+        setError("firebase", {
+            message: erroresFirebase(error.code),
+        })
+
         }
     }
+
 
 
     return(
         <>
             <h1>Login</h1>
-            <form onSubmit={handleSubmit}>
-                <input 
+            <FormError error={errors.firebase}/>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <FormInput
                     type="email" 
                     placeholder="ingresa el email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                />
-                <input 
+                    //con el require alli empezamos a trabajar con las validaciones
+                    {...register("email", {
+                        required
+                    ,
+                    pattern: patternEmail 
+                })}
+                >
+                    <FormError error={errors.email}/>
+                </FormInput>
+                <FormInput
                     type="password" 
                     placeholder="ingresa el password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                />
+                    //validacion de password con React-hook-form
+                    {...register("password",{
+                    minLength,
+                    // REVISA EL formValidate.js 
+                    validate: validateTrim
+                    })}
+                >
+                    <FormError error={errors.password}/>
+                </FormInput>
+            
                 <button type="submit">
                     Login
                 </button>
