@@ -9,7 +9,10 @@ export const erroresFirebase = (code) => {
             })
             break;
             */
-            return "Email already in use";
+        return {
+            code : "email",
+            message: "  Email already in use"
+        };
 
             case "auth/invalid-email":
                 /*setError("firebase", {
@@ -17,18 +20,27 @@ export const erroresFirebase = (code) => {
                 });
                 break;
                 */
-                return "Formato email no válido";
+                return {
+                    code : "email",
+                    message: "  Formato email no valido"
+                };
 
             //usuario no registrado
             case "auth/user-not-found":
-                return "usuario no registrado";
+                return {
+                    code : "password",
+                    message: "  Usuario no encotrado"
+                };
             
             //password incorrecto
             case "auth/wrong-password":
-                return "Password incorrecto";
+                return {
+                    code : "password",
+                    message: "  Password incorrecto"
+                };
 
         default:
-            return 'Ocurrio un error en el servidor'
+            return ' Ocurrio un error en el servidor'
             //console.log('Ocurrio un error en el servidor')
     }
 }

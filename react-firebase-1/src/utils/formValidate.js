@@ -17,13 +17,13 @@ const formValidate = () => {
         },
         validateTrim: {
             trim: (v) => {
-                if(!v.trim()) return "escribe bien el password!!"
+                if(!v.trim()) return " Por favor escribe bien el password!!"
                 true
             }
         },
-        validateEquals(getValues) {
+        validateEquals(value) {
             return {
-                equals: v => v === getValues("password") || "No coincide el password" ,  //Nota IMPORTANTE: ir a donde estan los elementos de useForm() y agregar getValues
+                equals: v => v === value || "No coincide el password" ,  //Nota IMPORTANTE: ir a donde estan los elementos de useForm() y agregar getValues
             //message: "No coincide el password"
             }
 

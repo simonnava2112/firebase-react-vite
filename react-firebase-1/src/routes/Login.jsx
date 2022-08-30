@@ -6,6 +6,8 @@ import { erroresFirebase } from "../utils/erroesFirebase"
 import FormError from "../components/FormError"
 import FormInput from "../components/FormInput"
 import formValidate from "../utils/formValidate"
+import Title from "../components/Title"
+import Button from "../components/Button"
 
 
 
@@ -30,10 +32,8 @@ const onSubmit = async({email, password}) => {
         navegate("/")
     } catch (error) {
         console.log(error.code)
-        setError("firebase", {
-            message: erroresFirebase(error.code),
-        })
-
+        const {code, message} = erroresFirebase(error.code)
+        setError(code, {message,})
         }
     }
 
@@ -41,8 +41,7 @@ const onSubmit = async({email, password}) => {
 
     return(
         <>
-            <h1>Login</h1>
-            <FormError error={errors.firebase}/>
+            <Title text="Login" />
             <form onSubmit={handleSubmit(onSubmit)}>
                 <FormInput
                     type="email" 
@@ -53,6 +52,8 @@ const onSubmit = async({email, password}) => {
                     ,
                     pattern: patternEmail 
                 })}
+                label="Ingresa email"
+                error={errors.password}
                 >
                     <FormError error={errors.email}/>
                 </FormInput>
@@ -65,13 +66,13 @@ const onSubmit = async({email, password}) => {
                     // REVISA EL formValidate.js 
                     validate: validateTrim
                     })}
+                    label="Ingresa password"
+                    error={errors.password}
                 >
                     <FormError error={errors.password}/>
                 </FormInput>
             
-                <button type="submit">
-                    Login
-                </button>
+                <Button text="login"/>
             </form>
         </>
     )

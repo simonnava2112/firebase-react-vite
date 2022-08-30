@@ -1,8 +1,10 @@
 import { useContext} from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
+import Button from "../components/Button"
 import FormError from "../components/FormError"
 import FormInput from "../components/FormInput"
+import Title from "../components/Title"
 
 import { UserContext} from "../context/UserProvider"
 import { erroresFirebase } from "../utils/erroesFirebase"
@@ -35,9 +37,8 @@ const {required, patternEmail, minLength, validateTrim, validateEquals} = formVa
                 navegate("/")
             } catch (error) {
                 console.log(error.code)
-                setError("firebase", {
-                    message: erroresFirebase(error.code),
-                })
+                const {code, message} = erroresFirebase(error.code)
+                setError(code, {message,})
                     /*switch(error.code){
                         case "auth/email-already-in-use":
                             console.log('Usuario ya registrado ')
@@ -57,18 +58,19 @@ const {required, patternEmail, minLength, validateTrim, validateEquals} = formVa
 
     return (
         <>
-            <h1>Register</h1>
+            <Title text="Register" />
             <form onSubmit={handleSubmit(onSubmit)}>
-                <FormError error={errors.firebase}/>
                 <FormInput
                     type="email" 
                     placeholder="ingresa el email"
                     //con el require alli empezamos a trabajar con las validaciones
                     {...register("email", {
                         required
-                    ,
-                    pattern: patternEmail 
-                })}
+                        ,
+                        pattern: patternEmail 
+                    })}
+                    label="Ingresa tu correo"
+                    error={errors.email}
                 >
                     <FormError error={errors.email}/>
                 </FormInput>
@@ -86,6 +88,8 @@ const {required, patternEmail, minLength, validateTrim, validateEquals} = formVa
                     // REVISA EL formValidate.js 
                     validate: validateTrim
                     })}
+                    label="Ingresa el password"
+                    error={errors.password}
                 >
                     <FormError error={errors.password}/>
                 </FormInput>
@@ -100,17 +104,17 @@ const {required, patternEmail, minLength, validateTrim, validateEquals} = formVa
                     type="password" 
                     placeholder="repetir el password"
                     {...register("repassword",{
-                        validate: validateEquals(getValues)
-                    } )}                
+                        validate: validateEquals(getValues("password"))
+                    })}
+                    label="Repite el password"
+                    error={errors.repassword}
                 >
                     <FormError error={errors.repassword}/>
                 </FormInput>
                 {
                     //errors.repassword && <p>{errors.repassword.message}</p>
                 }
-                <button type="submit">
-                    registrar
-                </button>
+                <Button text="Registrase"/>
             </form>
         </>
     )
