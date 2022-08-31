@@ -3,11 +3,13 @@ import { UserContext } from "../context/UserProvider"
 import{useNavigate} from 'react-router-dom'
 import { useForm } from "react-hook-form"
 import { erroresFirebase } from "../utils/erroesFirebase"
+
 import FormError from "../components/FormError"
 import FormInput from "../components/FormInput"
 import formValidate from "../utils/formValidate"
 import Title from "../components/Title"
 import Button from "../components/Button"
+import ButtonLoading from "../components/ButtonLoading"
 
 
 
@@ -15,6 +17,9 @@ import Button from "../components/Button"
 const Login = () => {
 //Paso 1
     const {loginUser} = useContext(UserContext)
+
+//Loading
+const [loading, setLoading] = useState(false)
     
 // IMPORTANTE EL NAVEGATE VA EN EL TRY DURAMOS AQUI UNA HORA VIENDO ESO
     const navegate = useNavigate()
@@ -27,15 +32,18 @@ const {required, patternEmail, minLength, validateTrim} = formValidate()
 // mismo evento del componente register solo cambia en el await por el loginUser que viene del componente provider
 
 const onSubmit = async({email, password}) => {
-    try {
-        await loginUser(email, password)
-        navegate("/")
-    } catch (error) {
-        console.log(error.code)
-        const {code, message} = erroresFirebase(error.code)
-        setError(code, {message,})
+        try {
+            setLoading(true)
+            await loginUser(email, password)
+            navegate("/")
+        } catch (error) {
+            console.log(error.code)
+            const {code, message} = erroresFirebase(error.code)
+            setError(code, {message,})
+        } finally {
+            setLoading(false)
         }
-    }
+    } 
 
 
 
@@ -71,8 +79,12 @@ const onSubmit = async({email, password}) => {
                 >
                     <FormError error={errors.password}/>
                 </FormInput>
-            
-                <Button text="login"/>
+                {
+                    loading ? 
+                    <ButtonLoading />
+                    :
+                    <Button text="login"/>
+                }
             </form>
         </>
     )

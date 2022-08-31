@@ -1,15 +1,21 @@
 import {Routes, Route} from 'react-router-dom'
-
+import { useContext } from 'react';
+import { UserContext } from './context/UserProvider';
 
 //Carpeta routes
 import Login from './routes/Login';
 import Home from './routes/Home';
+import Perfil from './routes/Perfil';
+import NotFound from './routes/NotFound';
+//Componentes
 import Navbar from './components/Navbar';
-import RequireAuth from './components/RequireAuth';
 import Register from './routes/Register';
-import { useContext } from 'react';
-import { UserContext } from './context/UserProvider';
 import LayoutContainer from './components/Layout/LayoutContainer';
+import RequireAuth from './components/Layout/RequireAuth';
+
+
+
+
 
 
 const App = () => {
@@ -25,18 +31,20 @@ const App = () => {
   return (
     <>
       <Navbar />
-      <h1>App</h1>
+
       <Routes>
-        <Route path='/' element={
-          <RequireAuth>
-            <Home/> 
-          </RequireAuth>
-        }/>
-        <Route path='/' element={<LayoutContainer/>}>
+      
+        <Route path="/" element={<RequireAuth />}>
+          <Route index element={<Home/>}/>
+          <Route path='perfil' element={<Perfil/>}/>
+        </Route>
+
+        <Route path='/' element={<LayoutContainer />}>
           <Route path='/login' element={<Login />} ></Route>
           <Route path='/register' element={<Register />} ></Route>
         </Route>
 
+          <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   )
