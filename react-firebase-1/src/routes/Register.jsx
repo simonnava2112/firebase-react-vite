@@ -118,15 +118,7 @@ const {required, patternEmail, minLength, validateTrim, validateEquals} = formVa
                 >
                     <FormError error={errors.repassword}/>
                 </FormInput>
-                {
-                    //errors.repassword && <p>{errors.repassword.message}</p>
-                }
-                {
-                    loading ? 
-                    <ButtonLoading />
-                    :
-                    <Button text="Registrarse"/>
-                }
+                <Button text="register" type="submit" loading={loading}/>
             </form>
         </>
     )

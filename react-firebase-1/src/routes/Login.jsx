@@ -79,12 +79,7 @@ const onSubmit = async({email, password}) => {
                 >
                     <FormError error={errors.password}/>
                 </FormInput>
-                {
-                    loading ? 
-                    <ButtonLoading />
-                    :
-                    <Button text="login"/>
-                }
+                    <Button text="login" type="submit" loading={loading}/>
             </form>
         </>
     )
