@@ -1,15 +1,21 @@
 
 import { useState } from "react"
 import { useEffect } from "react"
+import { useForm } from "react-hook-form"
 import Button from "../components/Button"
+import Card from "../components/Card"
+import FormError from "../components/FormError"
+import FormInput from "../components/FormInput"
 import Title from "../components/Title"
 import useFirestore from "../hooks/useFirestore"
+import formValidate from "../utils/formValidate"
 
 const Home = () => {
 
     const {data, error, loading, getData, addData, deleteData, updateData} = useFirestore()
-    const [text, setText] = useState('')
     const [newOriginsID, setNewOriginsID] = useState()
+    const {required, patternURL } = formValidate()
+    const {register, handleSubmit, formState: {errors},  setError, resetField, setValue } = useForm()
 
     useEffect(() => {
         console.log('getData')
@@ -19,18 +25,20 @@ const Home = () => {
     if(loading.getData) return <p>Loading data getData...</p>
     if(error) return <p>{error}</p>
 
-    const handleSubmit = async(e) => {
-        e.preventDefault()
-        
+    const onSubmit = async({url}) => {
+        try {
         if(newOriginsID){
-            await updateData(newOriginsID, text)
+            await updateData(newOriginsID, url)
             setNewOriginsID('')
-            setText('')
-            return
-    }
-        await addData(text)
-        setText('')
+        } else {
+            await addData(url)
+        }            
+        } catch (error) {
+            const {code, message} = erroresFirebase(error.code);
+            setError(code, {message})
+        }
 
+    resetField('url')
     }   
 
     const handleClickDelete = async(nanoid) => {
@@ -38,21 +46,29 @@ const Home = () => {
     }
 
     const handleClickEdit = (item) => {
-        setText(item.origin)
         setNewOriginsID(item.nanoid)
+        setValue('url', item.origin);
 
     }
 
     return(
         <>
             <Title text="Home"/>
-            <form onSubmit={handleSubmit}>
-                <input 
-                    type="text"
-                    placeholder="Ingresa la Url"
-                    value={text}
-                    onChange={e => setText(e.target.value)}
-                />
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <FormInput
+                    type="text" 
+                    placeholder="ingresa el url"
+                    //con el require alli empezamos a trabajar con las validaciones
+                    {...register("url", {
+                        required
+                    ,
+                    pattern: patternURL 
+                })}
+                label="Ingresa email"
+                error={errors.url}
+                >
+                    <FormError error={errors.url}/>
+                </FormInput>
                 {
                     newOriginsID ? (
                         <Button 
@@ -73,24 +89,26 @@ const Home = () => {
             {
                 data.map(item => (
                     <div key={item.nanoid}>
-                        <p>{item.nanoid}</p>
-                        <p>{item.origin}</p>
-                        <p>{item.uid}</p>
-                        <Button 
-                            text="Delete" 
-                            type="button" 
-                            color="red"
-                            loading={loading[item.nanoid]}
-                            onClick={() => handleClickDelete(item.nanoid)} 
+                        <Card 
+                            p1={item.nanoid}
+                            p2={item.origin}
                             />
-                        <Button 
-                            text="Edit" 
-                            type="button" 
-                            color="blue"
-                            loading={loading[item.nanoid]}
-                            onClick={() => handleClickEdit(item)} 
-                            />
-                            
+                        <div className="flex space-x-2">
+                                <Button 
+                                    text="Delete" 
+                                    type="button" 
+                                    color="red"
+                                    loading={loading[item.nanoid]}
+                                    onClick={() => handleClickDelete(item.nanoid)} 
+                                    />
+                                <Button 
+                                    text="Edit" 
+                                    type="button" 
+                                    color="blue"
+                                    loading={loading[item.nanoid]}
+                                    onClick={() => handleClickEdit(item)} 
+                                    />
+                        </div>
                     </div>
                 ))
             }
