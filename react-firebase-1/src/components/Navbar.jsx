@@ -1,6 +1,7 @@
 import { useContext } from 'react'
-import {NavLink} from 'react-router-dom'
+import {Link, NavLink} from 'react-router-dom'
 import { UserContext } from '../context/UserProvider'
+import Button from './Button'
 
 const Navbar = () => {
 
@@ -18,24 +19,33 @@ const Navbar = () => {
 
     }
 
+    const classButtonGreen = "text-center text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+    const classButtonRed = "text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+    
     return(
-        <div>
-            {user ? (
-                <>
-                <NavLink to="/">Inicio</NavLink>
-                <button onClick={handleClickLogOut} >Cerrar </button>
-                </>
-                ) : (
-                    <>
-                        <NavLink to="/login">Login</NavLink>
-                        |||
-                        <NavLink to="/register">Register</NavLink>
-                    </>
-                )
+        <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
+            <div className="container flex flex-wrap justify-between items-center mx-auto">
+                <Link to="/" className="flex items-center"><span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Login Web</span> </Link>
+                    <div className="flex md:order-2">
+                    {user ? (
+                        <>
+                        <NavLink to="/" className={classButtonGreen}>Inicio</NavLink>
+                        <button onClick={handleClickLogOut} className={classButtonRed}>Cerrar </button>
+                        </>
+                        ) : (
+                            <>
+                                <NavLink className={classButtonGreen} to="/login">Login</NavLink>
+                                
+                                <NavLink to="/register" className={classButtonGreen}>Register</NavLink>
+                            </>
+                        )
+                    }                    
+                    </div>
+                
+            </div>
 
-            }
 
-        </div>
+        </nav>
     )
 }
 

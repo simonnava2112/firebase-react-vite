@@ -3,9 +3,13 @@ import { UserContext } from "../context/UserProvider"
 import{useNavigate} from 'react-router-dom'
 import { useForm } from "react-hook-form"
 import { erroresFirebase } from "../utils/erroesFirebase"
+
 import FormError from "../components/FormError"
 import FormInput from "../components/FormInput"
 import formValidate from "../utils/formValidate"
+import Title from "../components/Title"
+import Button from "../components/Button"
+import ButtonLoading from "../components/ButtonLoading"
 
 
 
@@ -13,6 +17,9 @@ import formValidate from "../utils/formValidate"
 const Login = () => {
 //Paso 1
     const {loginUser} = useContext(UserContext)
+
+//Loading
+const [loading, setLoading] = useState(false)
     
 // IMPORTANTE EL NAVEGATE VA EN EL TRY DURAMOS AQUI UNA HORA VIENDO ESO
     const navegate = useNavigate()
@@ -25,24 +32,24 @@ const {required, patternEmail, minLength, validateTrim} = formValidate()
 // mismo evento del componente register solo cambia en el await por el loginUser que viene del componente provider
 
 const onSubmit = async({email, password}) => {
-    try {
-        await loginUser(email, password)
-        navegate("/")
-    } catch (error) {
-        console.log(error.code)
-        setError("firebase", {
-            message: erroresFirebase(error.code),
-        })
-
+        try {
+            setLoading(true)
+            await loginUser(email, password)
+            navegate("/")
+        } catch (error) {
+            console.log(error.code)
+            const {code, message} = erroresFirebase(error.code)
+            setError(code, {message,})
+        } finally {
+            setLoading(false)
         }
-    }
+    } 
 
 
 
     return(
         <>
-            <h1>Login</h1>
-            <FormError error={errors.firebase}/>
+            <Title text="Login" />
             <form onSubmit={handleSubmit(onSubmit)}>
                 <FormInput
                     type="email" 
@@ -53,6 +60,8 @@ const onSubmit = async({email, password}) => {
                     ,
                     pattern: patternEmail 
                 })}
+                label="Ingresa email"
+                error={errors.password}
                 >
                     <FormError error={errors.email}/>
                 </FormInput>
@@ -65,13 +74,12 @@ const onSubmit = async({email, password}) => {
                     // REVISA EL formValidate.js 
                     validate: validateTrim
                     })}
+                    label="Ingresa password"
+                    error={errors.password}
                 >
                     <FormError error={errors.password}/>
                 </FormInput>
-            
-                <button type="submit">
-                    Login
-                </button>
+                    <Button text="login" type="submit" loading={loading}/>
             </form>
         </>
     )

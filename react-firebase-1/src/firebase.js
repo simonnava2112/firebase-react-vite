@@ -1,5 +1,6 @@
 import {getAuth} from 'firebase/auth';
 import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore/lite";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDunvzk8am84fIEpZXNwqQY7-iRWS8tX18",
@@ -13,8 +14,10 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app)
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app);
 
-export { auth };
+export { auth, db };
 
 /*
 Instalar firebase 
