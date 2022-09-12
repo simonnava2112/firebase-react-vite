@@ -71,7 +71,7 @@ const useFirestore = () => {
         try {
             setLoading(prev => ({...prev, [nanoid]:  true}))
             const docRef = doc(db, "URL", nanoid)
-            await updateDoc(docRef, {origin: newOrigin})
+            await updateDoc(docRef, {origin: newOrigin}) 
             setData(data.map(item => item.nanoid === nanoid ? ({...item, origin: newOrigin}): item))
         } catch (error) {
             console.log(error)

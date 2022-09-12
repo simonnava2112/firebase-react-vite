@@ -18,20 +18,20 @@ const Home = () => {
     const {register, handleSubmit, formState: {errors},  setError, resetField, setValue } = useForm()
 
     useEffect(() => {
-        console.log('getData')
+        console.log('getData2')
         getData()
     },[])
 
     if(loading.getData) return <p>Loading data getData...</p>
     if(error) return <p>{error}</p>
 
-    const onSubmit = async({url}) => {
+    const onSubmit = async({url, nombre}) => {
         try {
         if(newOriginsID){
-            await updateData(newOriginsID, url)
+            await updateData(newOriginsID, url, nombre)
             setNewOriginsID('')
         } else {
-            await addData(url)
+            await addData(url, nombre)
         }            
         } catch (error) {
             const {code, message} = erroresFirebase(error.code);
@@ -55,6 +55,11 @@ const Home = () => {
         <>
             <Title text="Home"/>
             <form onSubmit={handleSubmit(onSubmit)}>
+                <FormInput 
+                    type="text"
+                    placeholder="Nombre"
+                    label="Nombre"
+                />
                 <FormInput
                     type="text" 
                     placeholder="ingresa el url"
@@ -88,9 +93,9 @@ const Home = () => {
             </form>
             {
                 data.map(item => (
-                    <div key={item.nanoid}>
+                    <div key={item.nanoid} className="p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
                         <Card 
-                            p1={item.nanoid}
+                            p1={item.nombre}
                             p2={item.origin}
                             />
                         <div className="flex space-x-2">
@@ -100,14 +105,14 @@ const Home = () => {
                                     color="red"
                                     loading={loading[item.nanoid]}
                                     onClick={() => handleClickDelete(item.nanoid)} 
-                                    />
+                                />
                                 <Button 
                                     text="Edit" 
                                     type="button" 
                                     color="blue"
                                     loading={loading[item.nanoid]}
                                     onClick={() => handleClickEdit(item)} 
-                                    />
+                                />
                         </div>
                     </div>
                 ))
